@@ -11,3 +11,18 @@ public/ – contains all static files like images, styles and javascript.</br>
 config/ -contains the configuration files.</br>
 app.js – initializes the app and glues everything together</br>
 </br>#How To Install  & run:</br>npm install</br>node app  
+
+# 2. Express_mvc_2
+This is Static webapplication using expressJS</br>
+Topics coverd in this applications are:</br>
+i) ExpressJS - Routing<br/>
+ii) ExpressJS - HTTP Methods<br/>
+iii) ExpressJS - Middleware<br/>
+iv) ExpressJS - Templating<br/>
+v) ExpressJS - Serving static files<br/>
+vi) ExpressJS - Form data</br>
+vii) ExpressJS - Sessions</br>
+viii) ExpressJS - Authentication</br>
+ix) ExpressJS - Error Handling</br>
+x) Express MVC</br>
+</br>#How To Install  & run:</br>npm install</br>node app  
