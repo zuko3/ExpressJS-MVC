@@ -1,0 +1,15 @@
+nav#mynavbar
+  .container
+    ul
+      li
+        a(href='/home') Home
+      li
+        a(href='/home/service') Service
+      li
+        a(href='/home/contact') Contact
+      li
+        a(href='/home/about') About
+      if(user)
+        li
+          a(href='/auth/logout') Logout
+

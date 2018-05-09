@@ -1,0 +1,202 @@
+ body{
+	 background-color:#f4f4f4;
+	 font-family:Arial, Helvetica, sans-serif;
+	 color:#555;
+	 line-height:1.6em;
+	 font-size:16px;
+	 margin:0;
+ }
+ 
+ .error{
+	 color:red !important;
+ }
+ 
+ .container{
+	 width:90%;
+	 margin:auto;
+	 overflow:hidden;
+ }
+ 
+ #header{
+	 background-color:coral;
+	 color:white;
+ }
+ 
+ #mynavbar{
+	 background-color:#333;
+	 color:#fff;
+ }
+ 
+ #mynavbar ul{
+	 list-style:none;
+	 padding:0px;	 
+ } 
+ 
+  #mynavbar li{
+	   display:inline;
+	   padding: 0 10px;
+	   border-left: solid 2px white;
+  }
+  #mynavbar li:first-child{
+    border-left: none;
+  }
+  
+  #mynavbar a{
+	   text-decoration:none;
+	   color:white;
+  }
+  #mynavbar a:hover{
+	   text-decoration:none;
+	   color:white;
+  }
+  
+  #showcase{
+	  height:200px;
+	  background-image:url('http://dice-academy.com/wp-content/uploads/2016/05/education-banner.jpg');
+	  text-align:center;
+	  
+  }
+  
+  #showcase h2{
+	    color:white;
+		font-size:22px;
+	    padding-top:60px;
+		
+  }
+  
+  #leftsidebar{
+	  float:left;
+	  color:white;
+	  width:20%;
+	  height:auto;
+  }
+   
+   .menu{
+	   margin-top:20px;
+	   background:#333;
+	   border-left:4px solid red;
+	   padding:20px;
+   }
+   
+  #mainContent{
+	 float:left;
+	 padding:20px;
+	 width:75%;
+
+  }
+  
+  #footer{
+	 text-align:center;
+	  background:#333;
+	  color:white;
+	  padding:30px;
+  }
+  
+   .marginleft{
+	  margin-left:10px;
+  }
+  
+  
+  .articleJest{
+	   margin-bottom:20px;
+	   border-right:4px solid red;
+	   background:#333;
+	   float:left;
+	   width:49.3%;
+	   padding:10px;
+	   color:white;
+	   box-sizing:border-box;
+  }
+  
+  
+  .articleInfo{
+	  border-right:4px solid yellow;
+	  margin-bottom:20px;
+	  float:left;
+	  background:#333;
+	  padding:10px;
+	  color:white;
+	  width:auto;
+}
+  
+  
+.my-form{
+		padding:20px;
+}
+
+	.my-form .form-group{
+	padding-bottom:15px;
+}
+
+.my-form label{
+	display:block;
+}
+
+.my-form input[type="text"],textarea{
+	padding:8px;
+	width:60%;
+}
+.my-form input[type="password"]{
+	padding:8px;
+	width:60%;
+}
+
+.my-form input[type="submit"]{
+	background-color:#333;
+	color:#fff;
+	padding:10px 15px;
+	border:none;
+}
+
+.my-form input[type="submit"]:hover{
+	background-color:black;
+}
+  
+@media(max-width: 980px) { 
+		#leftsidebar{
+		  float:left;
+		  color:white;
+		  width:100%;
+		  height:auto;
+	   }
+	   
+	   .menu{
+		   margin-top:20px;
+		   background:#333;
+		   border-left:4px solid red;
+		   padding:20px;
+	   }
+	   
+	   #mainContent{
+		 float:left;
+		 padding-right:20px;
+		 padding-left:20px;
+		 width:100%;
+
+	  }
+	   
+	  .articleJest{
+		   border-right:4px solid red;
+		   margin-bottom:20px;
+		   margin-left:5px;
+		   margin-right:5px;
+		   background:#333;
+		   float:left;
+		   width:93.2%;
+		   padding:10px;
+		   color:white;
+		   box-sizing:border-box;
+	  }
+	  
+	  
+	  .articleInfo{
+		  border-right:4px solid yellow;
+		  margin-bottom:20px;
+		  float:left;
+		  background:#333;
+		  padding:10px;
+		  color:white;
+		  width:90%;
+	  }
+	  
+  }

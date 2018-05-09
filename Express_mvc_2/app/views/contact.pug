@@ -1,0 +1,30 @@
+include ./header.pug
+include ./menu.pug
+include ./banner.pug
+
+.container
+  section#mainContent
+    h2 #{titleforpage}
+    if(!data)
+      form(action = "/home/contact", method = "POST").my-form
+        .form-group
+          label Name:
+          input(type='text', name='name')
+        .form-group
+          label Email:
+          input(type='text', name='email')
+        .form-group
+          label Message:
+          textarea(name='message')
+        input.button(type='submit')
+    else
+      h3 Thanks for contacting.
+      h3 Details:
+      ul
+        li Name: #{data.name}
+        li Email: #{data.email}
+        li Message: #{data.message}
+		
+	  
+ 
+include ./footer.pug

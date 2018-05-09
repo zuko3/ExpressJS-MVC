@@ -1,0 +1,11 @@
+{
+    "name": "MVC-Express-Application",
+    "description": "An Express.js application using the MVC design pattern...",
+    "version": "0.0.1",
+    "dependencies": {
+        "body-parser": "^1.18.2",
+        "express": "4.4.4",
+        "express-session": "^1.15.6",
+        "pug": "^2.0.3"
+    }
+}

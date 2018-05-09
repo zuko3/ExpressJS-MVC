@@ -1,0 +1,28 @@
+include ./header.pug
+.container
+  section#mainContent
+    h2 Login here.
+    if(error)
+      h4.error #{error}
+    form(action = "/auth/login", method = "POST").my-form
+      .form-group
+        label UserName:
+        input(type='text', name='username')
+      .form-group
+        label Password:
+        input(type='password', name='password')
+      input.button(type='submit' value='Login now')
+      p
+        a(href="/auth/register") new user register here
+    
+
+
+
+    
+
+
+
+
+    
+
+
