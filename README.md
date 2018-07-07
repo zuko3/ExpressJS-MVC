@@ -26,3 +26,11 @@ viii) ExpressJS - Authentication</br>
 ix) ExpressJS - Error Handling</br>
 x) Express MVC</br>
 </br>#How To Install  & run:</br>npm install</br>node app  
+
+# 3. Exress_MVC_REST_API
+This project is related to Developing rest api in mvc pattren in Node.</br>
+Topics coverd in this applications are:</br>
+1) Authentication</br>
+2) RouteProtection</br>
+3) JWT(TokenBased Authentication) & PasswordHashing</br>
+4) MongoDb Atlas.
