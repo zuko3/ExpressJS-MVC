@@ -23,6 +23,24 @@ module.exports = class Products {
         });
     }
 
+    static edit(productId, product, cbFunc) {
+        fs.readFile(file, (err, fileContent) => {
+            let products = [];
+            if (err !== null) return cbFunc();
+            products = JSON.parse(fileContent);
+            const existingProductIndex = products.findIndex(product => product.id == productId);
+            if (existingProductIndex !== -1) {
+                products[existingProductIndex] = product;
+                fs.writeFile(file, JSON.stringify(products), (err) => {
+                    if (null !== err) { console.log("Error occured in writing file :", err) }
+                    cbFunc()
+                })
+            } else {
+                cbFunc()
+            }
+        });
+    }
+
     static getAll(cbFunc) {
         fs.readFile(file, (err, fileContent) => {
             if (null !== err) cbFunc([]);
