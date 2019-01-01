@@ -35,7 +35,12 @@ exports.getEditProduct = (req, res, next) => {
 }
 
 exports.postEditProduct = (req, res, next) => {
-    //To do Edit products
+    const { productId, title, imageUrl, price, description } = req.body;
+    const Product = new Products(title, imageUrl, description, price);
+    Product['id'] = productId;
+    Products.edit(productId, Product,
+        () => res.redirect("/admin/products")
+    )
 }
 
 exports.getProducts = (req, res, next) => {
