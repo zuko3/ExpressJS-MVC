@@ -48,7 +48,15 @@ module.exports = class Products {
             else {
                 const existingProducts = JSON.parse(fileContent);
                 const products = existingProducts.filter(product => product.id !== productId);
-                const productPrice = existingProducts.find(product => product.id === productId).price;
+                
+                let productPrice = 0;
+                const foundProduct = existingProducts.find(product => product.id === productId);
+                if (foundProduct) {
+                    productPrice = foundProduct.price
+                }else{
+                    return cbFunc();
+                }
+                         
                 fs.writeFile(file, JSON.stringify(products), (err) => {
                     if (null !== err) console.log(err);
                     Cart.deleteProduct(productId, productPrice, cbFunc)
