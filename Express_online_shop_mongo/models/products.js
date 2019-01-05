@@ -1,31 +1,26 @@
-const fs = require('fs');
-const path = require("path");
-const rootPath = require('../util/path');
-const Cart = require('./cart');
+const mongodb = require('mongodb');
+const getDb = require("../util/database").getDb;
 
 module.exports = class Products {
-    constructor(title, imageUrl, description, price) {
-        this.id = Math.random().toString();
+    constructor(title,imageUrl, description,price) {
         this.title = title;
-        this.imageUrl = imageUrl;
-        this.description = description;
         this.price = price;
+        this.description = description;
+        this.imageUrl = imageUrl;
     }
-
-    save() {
-    }
-
-    static edit(productId, product, cbFunc) {
     
+    save() {
+        const db = getDb();
+        return db.collection('products').insertOne(this);
     }
 
-    static delete(productId, cbFunc) {
+    static fetchAll() {
+        const db = getDb();
+        return db.collection('products').find().toArray();
     }
 
-    static getAll(cbFunc) {
-
-    }
-
-    static getProductById(id, cbFunc) {
+    static findById(prodId) {
+        const db = getDb();
+        return db.collection('products').find({ _id: new mongodb.ObjectID(prodId) }).next();
     }
 }

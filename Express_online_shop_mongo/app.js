@@ -5,6 +5,7 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const errorController = require('./controllers/errors')
 const app = express();
+const mongoConnect = require("./util/database").mongoConnect;
 
 
 /**
@@ -38,4 +39,10 @@ app.use(shopRoutes);
  */
 app.use(errorController.get404Page);
 
-app.listen(3000);
+/**
+ * Connecting to data base
+ */
+mongoConnect(() => {
+  console.log("DataBase connection Established ...")
+  app.listen(3000);
+})
