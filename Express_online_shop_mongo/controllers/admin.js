@@ -16,47 +16,48 @@ exports.addProducts = (req, res, next) => {
         .catch(err => console.log("[ Error in inserting in addProducts ]:", err))
 }
 
-// exports.getEditProduct = (req, res, next) => {
-//     const editMode = (req.query.edit === 'true');
-//     if (!editMode) {
-//         return res.redirect("/")
-//     }
-//     const { productId } = req.params;
-//     Products.getProductById(productId, product => {
-//         if (!product) {
-//             return res.redirect("/");
-//         }
-//         res.render('admin/edit-product', {
-//             pageTitle: 'Edit Product',
-//             path: '/admin/edit-product',
-//             editing: editMode,
-//             product: product
-//         });
-//     })
-// }
+exports.getProducts = (req, res, next) => {
+    Products.fetchAll()
+        .then(products => res.render('admin/products', {
+            prods: products,
+            pageTitle: 'Admin Products',
+            path: '/admin/products'
+        }))
+        .catch(err => console.log("[ Error in getProducts ]:", err))
+}
 
-// exports.postEditProduct = (req, res, next) => {
-//     const { productId, title, imageUrl, price, description } = req.body;
-//     const Product = new Products(title, imageUrl, description, price);
-//     Product['id'] = productId;
-//     Products.edit(productId, Product,
-//         () => res.redirect("/admin/products")
-//     )
-// }
+exports.getEditProduct = (req, res, next) => {
+    const editMode = (req.query.edit === 'true');
+    if (!editMode) {
+        return res.redirect("/")
+    }
+    const { productId } = req.params;
+    Products.findById(productId)
+        .then(product => {
+            if (!product) {
+                return res.redirect("/");
+            }
+            res.render('admin/edit-product', {
+                pageTitle: 'Edit Product',
+                path: '/admin/edit-product',
+                editing: editMode,
+                product: product
+            });
+        }).catch(err => console.log("[ Error in getEditProduct ]:", err))
+}
 
-// exports.getProducts = (req, res, next) => {
-//     Products.getAll(
-//         products => res.render('admin/products', {
-//             prods: products,
-//             pageTitle: 'Admin Products',
-//             path: '/admin/products'
-//         })
-//     );
-// }
+exports.postEditProduct = (req, res, next) => {
+    const { productId, title, imageUrl, price, description } = req.body;
+    const Product = new Products(title, imageUrl, description, price);
+    Product.edit(productId)
+        .then(() => res.redirect("/admin/products"))
+        .catch(err => console.log("[Error in postEditProduct]:", err))
+}
 
-// exports.postDeleteProduct = (req, res, next) => {
-//     const { productId } = req.body;
-//     Products.delete(productId,
-//         () => res.redirect("/admin/products")
-//     );
-// } 
+
+exports.postDeleteProduct = (req, res, next) => {
+    const { productId } = req.body;
+    Products.delete(productId)
+    .then(() => res.redirect("/admin/products"))
+    .catch(err=>console.log("[Catch inside postDeleteProduct ]:",err))
+} 
