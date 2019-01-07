@@ -1,5 +1,4 @@
 const Products = require('../models/products');
-const Cart = require('../models/cart');
 
 exports.getIndex = (req, res, next) => {
     Products.fetchAll()
@@ -26,50 +25,43 @@ exports.getProduct = (req, res, next) => {
         ).catch(err => console.log("[ Error in for singleProduct getProduct ]:", err))
 }
 
-// exports.getCart = (req, res, next) => {
-//     Cart.getCart(cart => {
-//         Products.getAll(products => {
-//             let cartProducts = [];
-//             cart['products'].forEach(cproduct => {
-//                 const cartItem = products.find(product => cproduct.id === product.id)
-//                 if (cartItem) {
-//                     cartProducts.push({
-//                         cartproduct: cartItem,
-//                         qty: cproduct.qty
-//                     })
-//                 }
-//             });
-//             res.render('shop/cart', {
-//                 cartProducts: cartProducts,
-//                 total: cart['totalPrice'],
-//                 path: '/cart',
-//                 pageTitle: 'Your Cart'
-//             });
-//         })
-//     })
-// }
+exports.getCart = (req, res, next) => {
+    req.user.getCart()
+        .then(products => res.render('shop/cart', {
+            cartProducts: products,
+            path: '/cart',
+            pageTitle: 'Your Cart'
+        }))
+        .catch(err => console.log("[Error in getCart controller]", err))
+}
 
-// exports.postCartDelete = (req, res, next) => {
-//     const { productId, price } = req.body;
-//     Cart.deleteProduct(productId, price, () => {
-//         res.redirect("cart")
-//     })
-// }
+exports.postCart = (req, res, next) => {
+    const { productId } = req.body;
+    Products.findById(productId)
+        .then(product => req.user.addToCart(product))
+        .then(result => res.redirect("/cart"));
+}
 
-// exports.postCart = (req, res, next) => {
-//     const { productId } = req.body;
-//     Products.getProductById(
-//         productId,
-//         product => Cart.addProducts(productId, product.price)
-//     );
-//     res.redirect("/cart");
-// }
-
-// exports.getOrders = (req, res, next) => {
-//     res.render('shop/orders', { path: '/orders', pageTitle: 'Your Orders' })
-// }
+exports.postCartDelete = (req, res, next) => {
+    const { productId, price } = req.body;
+    req.user.deleteItemFromCart(productId)
+        .then(() => res.redirect("/cart"))
+        .catch(err => console.log("[Error in postCartDelete]", err))
+}
 
 
-// exports.getCheckout = (req, res, next) => {
-//     res.render('shop/checkout', { path: '/checkout', pageTitle: 'Checkout' })
-// }
+
+exports.getOrders = (req, res, next) => {
+    res.render('shop/orders', { path: '/orders', pageTitle: 'Your Orders' })
+}
+
+exports.postOrders = (req, res, next) => {
+    req.user.addOrder()
+        .then(result => res.redirect('/orders'))
+        .catch(err => console.log("[Error in postOrder Controller]:", err))
+}
+
+
+exports.getCheckout = (req, res, next) => {
+    res.render('shop/checkout', { path: '/checkout', pageTitle: 'Checkout' })
+}

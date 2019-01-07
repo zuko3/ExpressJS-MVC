@@ -7,21 +7,25 @@
                 <% if(cartProducts.length == 0) {%>
                 <h3>Your cart is Empty</h3>
                 <%}else{%>
-                Total: $
-                <%=total%>
                 <%
                         cartProducts.forEach((item)=>{%>
                 <p>
                         <li>
-                                <%=item.cartproduct.title%> (
-                                <%=item.qty%>) </li>
-                        <form action="/cart-delete-item" method="POST">
-                                <input type="hidden" value="<%=item.cartproduct.id%>" name="productId" />
-                                <input type="hidden" value="<%=item.cartproduct.price%>" name="price" />
-                                <button class="btn" type="submit">Delete</button>
-                        </form>
-
+                                <%=item.title%> (
+                                <%=item.quantity%>)
+                                <form action="/cart-delete-item" method="POST">
+                                        <input type="hidden" value="<%=item._id%>" name="productId" />
+                                        <input type="hidden" value="<%=item.price%>" name="price" />
+                                        <button class="btn" type="submit">Delete</button>
+                                </form>
+                        </li>
                 </p>
-                <%})}%>
+                <%})%>
+                <p>
+                        <form action="/create-order" method="POST">
+                                <button class="btn" type="submit">Place Order</button>
+                        </form>
+                </p>
+                <%}%>
         </main>
         <%- include('../includes/end.ejs') %>

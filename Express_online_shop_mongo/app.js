@@ -6,6 +6,7 @@ const shopRoutes = require('./routes/shop');
 const errorController = require('./controllers/errors')
 const app = express();
 const mongoConnect = require("./util/database").mongoConnect;
+const User = require("./models/user");
 
 
 /**
@@ -24,9 +25,14 @@ app.use(express.static(path.join(__dirname, 'public')));
  * Middleware that process every incomming request
  */
 app.use((req, res, next) => {
+  User.findById("5c326f291c9d4400001156b3")
+    .then(user => {
+      req.user = new User(user.userName, user.email, user.cart, user._id);
+      next()
+    })
+    .catch(err => console.log("[Error]:", err))
   console.log("Logging the middleware functions :", req.url);
-  next();
-})
+});
 
 /**
  * Routes used
