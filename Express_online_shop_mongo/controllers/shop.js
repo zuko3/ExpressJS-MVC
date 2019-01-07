@@ -52,7 +52,13 @@ exports.postCartDelete = (req, res, next) => {
 
 
 exports.getOrders = (req, res, next) => {
-    res.render('shop/orders', { path: '/orders', pageTitle: 'Your Orders' })
+    req.user.getOrders()
+        .then(orders => res.render('shop/orders', {
+            orders: orders,
+            path: '/orders',
+            pageTitle: 'Your Orders'
+        }))
+        .catch(err => console.log("[Errorr in getOrders]:", err))
 }
 
 exports.postOrders = (req, res, next) => {
