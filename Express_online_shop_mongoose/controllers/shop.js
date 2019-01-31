@@ -1,14 +1,14 @@
 const Products = require('../models/products');
 
 exports.getIndex = (req, res, next) => {
-    Products.fetchAll()
+    Products.find()
         .then(products =>
             res.render('shop/index', { prods: products, pageTitle: 'Shop', path: '/' })
         ).catch(err => console.log("[ Error in getIndex ]:", err))
 }
 
 exports.getProducts = (req, res, next) => {
-    Products.fetchAll()
+    Products.find()
         .then(products =>
             res.render('shop/product-list',
                 { prods: products, pageTitle: 'All Products', path: '/products' })

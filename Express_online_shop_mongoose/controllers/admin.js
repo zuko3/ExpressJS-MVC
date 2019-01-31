@@ -10,8 +10,10 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.addProducts = (req, res, next) => {
     const { title, imageUrl, price, description } = req.body;
-    const Product = new Products(title, imageUrl, description, price,req.user._id);
-    Product.save(Product)
+    const product = new Products({
+        title, imageUrl, description, price
+    });
+    product.save()
         .then(() => res.redirect('/'))
         .catch(err => console.log("[ Error in inserting in addProducts ]:", err))
 }
