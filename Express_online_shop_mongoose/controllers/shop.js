@@ -25,49 +25,49 @@ exports.getProduct = (req, res, next) => {
         ).catch(err => console.log("[ Error in for singleProduct getProduct ]:", err))
 }
 
-exports.getCart = (req, res, next) => {
-    req.user.getCart()
-        .then(products => res.render('shop/cart', {
-            cartProducts: products,
-            path: '/cart',
-            pageTitle: 'Your Cart'
-        }))
-        .catch(err => console.log("[Error in getCart controller]", err))
-}
+// exports.getCart = (req, res, next) => {
+//     req.user.getCart()
+//         .then(products => res.render('shop/cart', {
+//             cartProducts: products,
+//             path: '/cart',
+//             pageTitle: 'Your Cart'
+//         }))
+//         .catch(err => console.log("[Error in getCart controller]", err))
+// }
 
-exports.postCart = (req, res, next) => {
-    const { productId } = req.body;
-    Products.findById(productId)
-        .then(product => req.user.addToCart(product))
-        .then(result => res.redirect("/cart"));
-}
+// exports.postCart = (req, res, next) => {
+//     const { productId } = req.body;
+//     Products.findById(productId)
+//         .then(product => req.user.addToCart(product))
+//         .then(result => res.redirect("/cart"));
+// }
 
-exports.postCartDelete = (req, res, next) => {
-    const { productId, price } = req.body;
-    req.user.deleteItemFromCart(productId)
-        .then(() => res.redirect("/cart"))
-        .catch(err => console.log("[Error in postCartDelete]", err))
-}
-
-
-
-exports.getOrders = (req, res, next) => {
-    req.user.getOrders()
-        .then(orders => res.render('shop/orders', {
-            orders: orders,
-            path: '/orders',
-            pageTitle: 'Your Orders'
-        }))
-        .catch(err => console.log("[Errorr in getOrders]:", err))
-}
-
-exports.postOrders = (req, res, next) => {
-    req.user.addOrder()
-        .then(result => res.redirect('/orders'))
-        .catch(err => console.log("[Error in postOrder Controller]:", err))
-}
+// exports.postCartDelete = (req, res, next) => {
+//     const { productId, price } = req.body;
+//     req.user.deleteItemFromCart(productId)
+//         .then(() => res.redirect("/cart"))
+//         .catch(err => console.log("[Error in postCartDelete]", err))
+// }
 
 
-exports.getCheckout = (req, res, next) => {
-    res.render('shop/checkout', { path: '/checkout', pageTitle: 'Checkout' })
-}
+
+// exports.getOrders = (req, res, next) => {
+//     req.user.getOrders()
+//         .then(orders => res.render('shop/orders', {
+//             orders: orders,
+//             path: '/orders',
+//             pageTitle: 'Your Orders'
+//         }))
+//         .catch(err => console.log("[Errorr in getOrders]:", err))
+// }
+
+// exports.postOrders = (req, res, next) => {
+//     req.user.addOrder()
+//         .then(result => res.redirect('/orders'))
+//         .catch(err => console.log("[Error in postOrder Controller]:", err))
+// }
+
+
+// exports.getCheckout = (req, res, next) => {
+//     res.render('shop/checkout', { path: '/checkout', pageTitle: 'Checkout' })
+// }
