@@ -46,12 +46,12 @@ exports.postCart = (req, res, next) => {
         .then(result => res.redirect("/cart"));
 }
 
-// exports.postCartDelete = (req, res, next) => {
-//     const { productId, price } = req.body;
-//     req.user.deleteItemFromCart(productId)
-//         .then(() => res.redirect("/cart"))
-//         .catch(err => console.log("[Error in postCartDelete]", err))
-// }
+exports.postCartDelete = (req, res, next) => {
+    const { productId } = req.body;
+    req.user.deleteItemFromCart(productId)
+        .then(() => res.redirect("/cart"))
+        .catch(err => console.log("[Error in postCartDelete]", err))
+}
 
 
 
