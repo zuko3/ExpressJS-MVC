@@ -25,22 +25,26 @@ exports.getProduct = (req, res, next) => {
         ).catch(err => console.log("[ Error in for singleProduct getProduct ]:", err))
 }
 
-// exports.getCart = (req, res, next) => {
-//     req.user.getCart()
-//         .then(products => res.render('shop/cart', {
-//             cartProducts: products,
-//             path: '/cart',
-//             pageTitle: 'Your Cart'
-//         }))
-//         .catch(err => console.log("[Error in getCart controller]", err))
-// }
+exports.getCart = (req, res, next) => {
+    req.user.populate('cart.items.productId')
+        .execPopulate()
+        .then(user => {
+            const products = user.cart.items;
+            return res.render('shop/cart', {
+                cartProducts: products,
+                path: '/cart',
+                pageTitle: 'Your Cart'
+            })
+        })
+        .catch(err => console.log("[Error in getCart controller]", err))
+}
 
-// exports.postCart = (req, res, next) => {
-//     const { productId } = req.body;
-//     Products.findById(productId)
-//         .then(product => req.user.addToCart(product))
-//         .then(result => res.redirect("/cart"));
-// }
+exports.postCart = (req, res, next) => {
+    const { productId } = req.body;
+    Products.findById(productId)
+        .then(product => req.user.addToCart(product))
+        .then(result => res.redirect("/cart"));
+}
 
 // exports.postCartDelete = (req, res, next) => {
 //     const { productId, price } = req.body;

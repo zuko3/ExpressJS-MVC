@@ -6,7 +6,7 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const errorController = require('./controllers/errors')
 const app = express();
-// const User = require("./models/user");
+const User = require("./models/user");
 
 
 /**
@@ -24,15 +24,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 /**
  * Middleware that process every incomming request
  */
-// app.use((req, res, next) => {
-//   User.findById("5c326f291c9d4400001156b3")
-//     .then(user => {
-//       req.user = new User(user.userName, user.email, user.cart, user._id);
-//       next()
-//     })
-//     .catch(err => console.log("[Error]:", err))
-//   console.log("Logging the middleware functions :", req.url);
-// });
+app.use((req, res, next) => {
+  User.findById("5c572c5797b852102cbc74fd")
+    .then(user => {
+      req.user =  user
+      next()
+    })
+    .catch(err => console.log("[Error]:", err))
+  console.log("Logging the middleware functions :", req.url);
+});
 
 /**
  * Routes used
@@ -50,6 +50,15 @@ app.use(errorController.get404Page);
  */
 mongoose.connect("mongodb+srv://onlineshop:onlineshop@cluster0-rndbr.mongodb.net/test?retryWrites=true")
   .then(result => {
+    //Temprorily create a user.
+    // const user = new User({
+    //   name:'Rahul',
+    //   email:'rahul@testmail.com',
+    //   cart:{
+    //     items:[]
+    //   }
+    // });
+    // user.save()
     app.listen(3000);
     console.log("Connection established ....")
   })
