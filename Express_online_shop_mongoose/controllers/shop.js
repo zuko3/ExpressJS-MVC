@@ -1,4 +1,5 @@
 const Products = require('../models/products');
+const Orders = require('../models/order');
 
 exports.getIndex = (req, res, next) => {
     Products.find()
@@ -54,24 +55,41 @@ exports.postCartDelete = (req, res, next) => {
 }
 
 
+exports.getOrders = (req, res, next) => {
+    Orders.find({ "user.userId": req.user._id })
+        .then(orders => res.render('shop/orders', {
+            orders: orders,
+            path: '/orders',
+            pageTitle: 'Your Orders'
+        }))
+        .catch(err => console.log("[Errorr in getOrders]:", err))
+}
 
-// exports.getOrders = (req, res, next) => {
-//     req.user.getOrders()
-//         .then(orders => res.render('shop/orders', {
-//             orders: orders,
-//             path: '/orders',
-//             pageTitle: 'Your Orders'
-//         }))
-//         .catch(err => console.log("[Errorr in getOrders]:", err))
-// }
+exports.postOrders = (req, res, next) => {
+    req.user.populate('cart.items.productId')
+        .execPopulate()
+        .then(user => {
+            const products = user.cart.items.map(i => {
+                return {
+                    quantity: i.quantity,
+                    //For geting the full product Details as we expand in populate
+                    product: { ...i.productId._doc }
+                }
+            });
+            const order = new Orders({
+                user: {
+                    name: req.user.name,
+                    userId: req.user
+                },
+                products: products
+            });
+            return order.save()
+        }).then(result => req.user.clearCart())
+        .then(() => res.redirect('/orders'))
+        .catch(err => console.log("[Error in postOrder Controller]:", err))
+}
 
-// exports.postOrders = (req, res, next) => {
-//     req.user.addOrder()
-//         .then(result => res.redirect('/orders'))
-//         .catch(err => console.log("[Error in postOrder Controller]:", err))
-// }
 
-
-// exports.getCheckout = (req, res, next) => {
-//     res.render('shop/checkout', { path: '/checkout', pageTitle: 'Checkout' })
-// }
+exports.getCheckout = (req, res, next) => {
+    res.render('shop/checkout', { path: '/checkout', pageTitle: 'Checkout' })
+}
