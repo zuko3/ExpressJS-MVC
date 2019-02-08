@@ -4,10 +4,21 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
+const authRoutes = require('./routes/auth');
 const errorController = require('./controllers/errors')
 const app = express();
 const User = require("./models/user");
-
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+const csrf = require('csurf');
+const flash = require('connect-flash');
+/**
+ * Creating store for storing session in dataBase
+ */
+const store = new MongoDBStore({
+  uri: "mongodb+srv://onlineshop:onlineshop@cluster0-rndbr.mongodb.net/test?retryWrites=true",
+  collection: 'sessions'
+});
 
 /**
  * Setting the view engines
@@ -22,12 +33,39 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 /**
+ * For storing session in the mongo database
+ */
+app.use(
+  session({
+    secret: 'my secret',
+    resave: false,
+    saveUninitialized: false,
+    store: store
+  })
+);
+
+
+/**
+ * CSRF protection middleware
+ */
+app.use(csrf());
+
+/**
+ *For using flash message 
+ */
+app.use(flash())
+
+
+/**
  * Middleware that process every incomming request
  */
 app.use((req, res, next) => {
-  User.findById("5c572c5797b852102cbc74fd")
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
     .then(user => {
-      req.user =  user
+      req.user = user
       next()
     })
     .catch(err => console.log("[Error]:", err))
@@ -35,10 +73,19 @@ app.use((req, res, next) => {
 });
 
 /**
+ * locals Allows us to set variable in response to pass local variables for currently renderd views
+ */
+app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
+  next();
+})
+
+/**
  * Routes used
  */
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
+app.use(authRoutes);
 
 /**
  * Middleware that get excuted when nothing get processed.
@@ -50,15 +97,6 @@ app.use(errorController.get404Page);
  */
 mongoose.connect("mongodb+srv://onlineshop:onlineshop@cluster0-rndbr.mongodb.net/test?retryWrites=true")
   .then(result => {
-    //Temprorily create a user.
-    // const user = new User({
-    //   name:'Rahul',
-    //   email:'rahul@testmail.com',
-    //   cart:{
-    //     items:[]
-    //   }
-    // });
-    // user.save()
     app.listen(3000);
     console.log("Connection established ....")
   })
