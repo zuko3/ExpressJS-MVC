@@ -4,7 +4,12 @@ const Orders = require('../models/order');
 exports.getIndex = (req, res, next) => {
     Products.find()
         .then(products =>
-            res.render('shop/index', { prods: products, pageTitle: 'Shop', path: '/' })
+            res.render('shop/index', { 
+                prods: products, 
+                pageTitle: 'Shop', 
+                path: '/', 
+                isAuthenticated: req.session.isLoggedIn
+             })
         ).catch(err => console.log("[ Error in getIndex ]:", err))
 }
 
@@ -12,7 +17,7 @@ exports.getProducts = (req, res, next) => {
     Products.find()
         .then(products =>
             res.render('shop/product-list',
-                { prods: products, pageTitle: 'All Products', path: '/products' })
+                { prods: products, pageTitle: 'All Products', path: '/products', isAuthenticated: req.session.isLoggedIn })
         ).catch(err => console.log("[ Error in getProducts ]:", err))
 }
 
@@ -21,7 +26,7 @@ exports.getProduct = (req, res, next) => {
     Products.findById(productId)
         .then(
             product => res.render('shop/product-detail', {
-                product: product, pageTitle: product.title, path: '/products'
+                product: product, pageTitle: product.title, path: '/products', isAuthenticated: req.session.isLoggedIn
             })
         ).catch(err => console.log("[ Error in for singleProduct getProduct ]:", err))
 }
@@ -34,7 +39,8 @@ exports.getCart = (req, res, next) => {
             return res.render('shop/cart', {
                 cartProducts: products,
                 path: '/cart',
-                pageTitle: 'Your Cart'
+                pageTitle: 'Your Cart',
+                isAuthenticated: req.session.isLoggedIn
             })
         })
         .catch(err => console.log("[Error in getCart controller]", err))
@@ -60,7 +66,8 @@ exports.getOrders = (req, res, next) => {
         .then(orders => res.render('shop/orders', {
             orders: orders,
             path: '/orders',
-            pageTitle: 'Your Orders'
+            pageTitle: 'Your Orders',
+            isAuthenticated: req.session.isLoggedIn
         }))
         .catch(err => console.log("[Errorr in getOrders]:", err))
 }
@@ -91,5 +98,5 @@ exports.postOrders = (req, res, next) => {
 
 
 exports.getCheckout = (req, res, next) => {
-    res.render('shop/checkout', { path: '/checkout', pageTitle: 'Checkout' })
+    res.render('shop/checkout', { path: '/checkout', pageTitle: 'Checkout', isAuthenticated: req.session.isLoggedIn })
 }
