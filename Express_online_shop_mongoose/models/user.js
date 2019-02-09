@@ -9,10 +9,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    password:{
-        type:String,
-        required:true
+    password: {
+        type: String,
+        required: true
     },
+    resetToken: String,
+    resetTokenExpiration: Date,
     cart: {
         items: [{
             productId: {

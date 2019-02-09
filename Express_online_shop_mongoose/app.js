@@ -60,6 +60,7 @@ app.use(flash())
  * Middleware that process every incomming request
  */
 app.use((req, res, next) => {
+  console.log("Logging the middleware functions :", req.url);
   if (!req.session.user) {
     return next();
   }
@@ -69,7 +70,6 @@ app.use((req, res, next) => {
       next()
     })
     .catch(err => console.log("[Error]:", err))
-  console.log("Logging the middleware functions :", req.url);
 });
 
 /**
