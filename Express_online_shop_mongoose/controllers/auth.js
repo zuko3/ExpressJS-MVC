@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 const crypto = require('crypto');
+const { validationResult } = require('express-validator/check');
 
 const transporter = nodemailer.createTransport(sendgridTransport({
     auth: {
@@ -23,7 +24,8 @@ exports.getSignup = (req, res, next) => {
     res.render('auth/signup', {
         path: '/signup',
         pageTitle: 'Signup',
-        isAuthenticated: false
+        isAuthenticated: false,
+        errorMessage: req.flash('error')
     });
 };
 
@@ -59,9 +61,25 @@ exports.postLogin = (req, res, next) => {
 
 exports.postSignup = (req, res, next) => {
     const { email, password, confirmPassword } = req.body;
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        let errMessage ='';
+        errors.array().forEach(error => {
+            errMessage += error.msg
+        })
+        return res.status(422).render('auth/signup', {
+            path: '/signup',
+            pageTitle: 'Signup',
+            isAuthenticated: false,
+            errorMessage:errMessage
+        });
+    }
     User.findOne({ email: email })
         .then(userDoc => {
-            if (userDoc) return res.redirect("/signup")
+            if (userDoc){
+                req.flash("error", "User already exists");
+                return res.redirect("/signup")
+            } 
             return bcrypt.hash(password, 12)
 
         }).then(hashedpassword => {
