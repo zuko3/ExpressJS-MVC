@@ -11,16 +11,15 @@ router.post('/login', authController.postLogin);
 router.post('/signup', [
     check('email').isEmail()
         .withMessage("please enter a valid email"),
-    body('password').isLength({ min: 5 })
-        .isAlphanumeric()
-        .withMessage("please enter a passowrd of text and chacter of 5 chars"),
-    body('confirmPassword').custom((value, { req }) => {
+    body('password', 'please enter a passowrd of text and chacter of 5 chars')
+        .isLength({ min: 5 })
+        .isAlphanumeric(),
+    body('confirmPassword', 'password have to match!').custom((value, { req }) => {
         if (value !== req.body.password) {
             throw new Error('password have to match!')
         }
         return true
     })
-        .withMessage("password have to match!")
 ], authController.postSignup);
 
 router.post('/logout', authController.postLogout);

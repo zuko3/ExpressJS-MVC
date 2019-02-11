@@ -65,7 +65,7 @@ exports.postSignup = (req, res, next) => {
     if(!errors.isEmpty()){
         let errMessage ='';
         errors.array().forEach(error => {
-            errMessage += error.msg
+            errMessage = errMessage + " - " + error.msg
         })
         return res.status(422).render('auth/signup', {
             path: '/signup',
