@@ -16,7 +16,10 @@ exports.addProducts = (req, res, next) => {
     });
     product.save()
         .then(() => res.redirect('/'))
-        .catch(err => console.log("[ Error in inserting in addProducts ]:", err))
+        .catch(err => {
+            res.redirect("/500");
+            console.log("[ Error in inserting in addProducts ]:", err)
+        })
 }
 
 exports.getProducts = (req, res, next) => {
@@ -27,7 +30,10 @@ exports.getProducts = (req, res, next) => {
             path: '/admin/products',
             isAuthenticated: req.session.isLoggedIn
         }))
-        .catch(err => console.log("[ Error in getProducts ]:", err))
+        .catch(err => {
+            res.redirect("/500");
+            console.log("[ Error in getProducts ]:", err)
+        })
 }
 
 exports.getEditProduct = (req, res, next) => {
@@ -48,7 +54,10 @@ exports.getEditProduct = (req, res, next) => {
                 product: product,
                 isAuthenticated: req.session.isLoggedIn
             });
-        }).catch(err => console.log("[ Error in getEditProduct ]:", err))
+        }).catch(err => {
+            res.redirect("/500");
+            console.log("[ Error in getEditProduct ]:", err)
+        })
 }
 
 exports.postEditProduct = (req, res, next) => {
@@ -62,12 +71,18 @@ exports.postEditProduct = (req, res, next) => {
             return product.save()
         })
         .then(() => res.redirect("/admin/products"))
-        .catch(err => console.log("[Error in postEditProduct]:", err))
+        .catch(err => {
+            res.redirect("/500");
+            console.log("[Error in postEditProduct]:", err)
+        })
 }
 
 exports.postDeleteProduct = (req, res, next) => {
     const { productId } = req.body;
     Products.findByIdAndRemove(productId)
-    .then(() => res.redirect("/admin/products"))
-    .catch(err=>console.log("[Catch inside postDeleteProduct ]:",err))
+        .then(() => res.redirect("/admin/products"))
+        .catch(err => {
+            res.redirect("/500");
+            console.log("[Catch inside postDeleteProduct ]:", err)
+        })
 } 
