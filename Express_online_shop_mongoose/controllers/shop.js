@@ -4,13 +4,17 @@ const Orders = require('../models/order');
 exports.getIndex = (req, res, next) => {
     Products.find()
         .then(products =>
-            res.render('shop/index', { 
-                prods: products, 
-                pageTitle: 'Shop', 
-                path: '/', 
+            res.render('shop/index', {
+                prods: products,
+                pageTitle: 'Shop',
+                path: '/',
                 isAuthenticated: req.session.isLoggedIn
-             })
-        ).catch(err => console.log("[ Error in getIndex ]:", err))
+            })
+        ).catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 }
 
 exports.getProducts = (req, res, next) => {
@@ -18,7 +22,11 @@ exports.getProducts = (req, res, next) => {
         .then(products =>
             res.render('shop/product-list',
                 { prods: products, pageTitle: 'All Products', path: '/products', isAuthenticated: req.session.isLoggedIn })
-        ).catch(err => console.log("[ Error in getProducts ]:", err))
+        ).catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 }
 
 exports.getProduct = (req, res, next) => {
@@ -28,7 +36,11 @@ exports.getProduct = (req, res, next) => {
             product => res.render('shop/product-detail', {
                 product: product, pageTitle: product.title, path: '/products', isAuthenticated: req.session.isLoggedIn
             })
-        ).catch(err => console.log("[ Error in for singleProduct getProduct ]:", err))
+        ).catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 }
 
 exports.getCart = (req, res, next) => {
@@ -43,21 +55,34 @@ exports.getCart = (req, res, next) => {
                 isAuthenticated: req.session.isLoggedIn
             })
         })
-        .catch(err => console.log("[Error in getCart controller]", err))
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 }
 
 exports.postCart = (req, res, next) => {
     const { productId } = req.body;
     Products.findById(productId)
         .then(product => req.user.addToCart(product))
-        .then(result => res.redirect("/cart"));
+        .then(result => res.redirect("/cart"))
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 }
 
 exports.postCartDelete = (req, res, next) => {
     const { productId } = req.body;
     req.user.deleteItemFromCart(productId)
         .then(() => res.redirect("/cart"))
-        .catch(err => console.log("[Error in postCartDelete]", err))
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 }
 
 
@@ -69,7 +94,11 @@ exports.getOrders = (req, res, next) => {
             pageTitle: 'Your Orders',
             isAuthenticated: req.session.isLoggedIn
         }))
-        .catch(err => console.log("[Errorr in getOrders]:", err))
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 }
 
 exports.postOrders = (req, res, next) => {
@@ -93,7 +122,11 @@ exports.postOrders = (req, res, next) => {
             return order.save()
         }).then(result => req.user.clearCart())
         .then(() => res.redirect('/orders'))
-        .catch(err => console.log("[Error in postOrder Controller]:", err))
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 }
 
 

@@ -17,8 +17,9 @@ exports.addProducts = (req, res, next) => {
     product.save()
         .then(() => res.redirect('/'))
         .catch(err => {
-            res.redirect("/500");
-            console.log("[ Error in inserting in addProducts ]:", err)
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         })
 }
 
@@ -31,8 +32,9 @@ exports.getProducts = (req, res, next) => {
             isAuthenticated: req.session.isLoggedIn
         }))
         .catch(err => {
-            res.redirect("/500");
-            console.log("[ Error in getProducts ]:", err)
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         })
 }
 
@@ -55,8 +57,9 @@ exports.getEditProduct = (req, res, next) => {
                 isAuthenticated: req.session.isLoggedIn
             });
         }).catch(err => {
-            res.redirect("/500");
-            console.log("[ Error in getEditProduct ]:", err)
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         })
 }
 
@@ -72,8 +75,9 @@ exports.postEditProduct = (req, res, next) => {
         })
         .then(() => res.redirect("/admin/products"))
         .catch(err => {
-            res.redirect("/500");
-            console.log("[Error in postEditProduct]:", err)
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         })
 }
 
@@ -82,7 +86,8 @@ exports.postDeleteProduct = (req, res, next) => {
     Products.findByIdAndRemove(productId)
         .then(() => res.redirect("/admin/products"))
         .catch(err => {
-            res.redirect("/500");
-            console.log("[Catch inside postDeleteProduct ]:", err)
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         })
 } 

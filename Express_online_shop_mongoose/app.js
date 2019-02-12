@@ -72,10 +72,7 @@ app.use((req, res, next) => {
       req.user = user
       next()
     })
-    .catch(err => {
-      throw new Error(err);
-      console.log("[Error]:", err)
-    })
+    .catch(err => next(new Error(err)))
 });
 
 /**
@@ -96,8 +93,12 @@ app.use(authRoutes);
 /**
  * Middleware that get excuted when nothing get processed and internal server error.
  */
-app.use('/500',errorController.get500Page);
+app.use('/500', errorController.get500Page);
 app.use(errorController.get404Page);
+/**
+ * Special middleware that takes 4 parameter this is error middleware
+ */
+app.use((error, req, res, next) => res.redirect("/500"))
 
 /**
  * Connecting to data base
