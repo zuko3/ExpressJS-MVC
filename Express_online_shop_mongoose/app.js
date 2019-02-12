@@ -55,11 +55,23 @@ app.use(csrf());
  */
 app.use(flash())
 
+/**
+ * locals Allows us to set variable in response to pass local variables for currently renderd views
+ */
+app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
+  next();
+})
 
 /**
  * Middleware that process every incomming request
  */
 app.use((req, res, next) => {
+  /**
+   * For syncronus function call throw new Error("some error") 
+   * will be handled by express error middleware.
+   * but for async call like inside then we need to use next(new Error("some error"))
+   */
   console.log("Logging the middleware functions :", req.url);
   if (!req.session.user) {
     return next();
@@ -76,14 +88,6 @@ app.use((req, res, next) => {
 });
 
 /**
- * locals Allows us to set variable in response to pass local variables for currently renderd views
- */
-app.use((req, res, next) => {
-  res.locals.csrfToken = req.csrfToken();
-  next();
-})
-
-/**
  * Routes used
  */
 app.use('/admin', adminRoutes);
@@ -98,7 +102,11 @@ app.use(errorController.get404Page);
 /**
  * Special middleware that takes 4 parameter this is error middleware
  */
-app.use((error, req, res, next) => res.redirect("/500"))
+app.use((error, req, res, next) => res.status(404).render('500', {
+  pageTitle: 'Internal server error',
+  path: '',
+  isAuthenticated: req.session.isLoggedIn
+}))
 
 /**
  * Connecting to data base
