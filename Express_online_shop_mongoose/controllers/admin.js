@@ -5,12 +5,19 @@ exports.getAddProduct = (req, res, next) => {
         pageTitle: 'Add Product',
         path: '/admin/add-product',
         editing: false,
-        isAuthenticated: req.session.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn,
+        errorMessage: req.flash('error')
     });
 }
 
 exports.addProducts = (req, res, next) => {
-    const { title, imageUrl, price, description } = req.body;
+    const { title, price, description } = req.body;
+    const image = req.file;
+    if (!image) {
+        req.flash('error', 'uplaod is not and image');
+        return res.redirect('/admin/add-product')
+    }
+    const imageUrl = image.path;
     const product = new Products({
         title, imageUrl, description, price
     });
