@@ -12,6 +12,8 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
+const multer = require('multer');
+
 /**
  * Creating store for storing session in dataBase
  */
@@ -19,6 +21,26 @@ const store = new MongoDBStore({
   uri: "mongodb+srv://onlineshop:onlineshop@cluster0-rndbr.mongodb.net/test?retryWrites=true",
   collection: 'sessions'
 });
+
+/**
+ * Setting the file storage and filter using multer
+ */
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images')//null specify no error proceed with opearations
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString().replace(/:/g, '-') + "-" + file.originalname)
+  }
+})
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+    cb(null, true); //null specify no error proceed with opearations true means file has accepatable format
+  } else {
+    cb(null, false);
+  }
+}
 
 /**
  * Setting the view engines
@@ -30,6 +52,7 @@ app.set('views', 'views');
  * Declearing bodyparser and static directory for css and image in middleware
  */
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 /**
@@ -102,11 +125,14 @@ app.use(errorController.get404Page);
 /**
  * Special middleware that takes 4 parameter this is error middleware
  */
-app.use((error, req, res, next) => res.status(404).render('500', {
-  pageTitle: 'Internal server error',
-  path: '',
-  isAuthenticated: req.session.isLoggedIn
-}))
+app.use((error, req, res, next) => {
+  console.log(error);
+  return res.status(500).render('500', {
+    pageTitle: 'Internal server error',
+    path: '',
+    isAuthenticated: req.session.isLoggedIn
+  })
+})
 
 /**
  * Connecting to data base
