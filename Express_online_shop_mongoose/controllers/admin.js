@@ -61,7 +61,8 @@ exports.getEditProduct = (req, res, next) => {
                 path: '/admin/edit-product',
                 editing: editMode,
                 product: product,
-                isAuthenticated: req.session.isLoggedIn
+                isAuthenticated: req.session.isLoggedIn,
+                errorMessage: req.flash('error')
             });
         }).catch(err => {
             const error = new Error(err);
@@ -71,11 +72,14 @@ exports.getEditProduct = (req, res, next) => {
 }
 
 exports.postEditProduct = (req, res, next) => {
-    const { productId, title, imageUrl, price, description } = req.body;
+    const { productId, title, price, description } = req.body;
+    const image = req.file;
     Products.findById(productId)
         .then(product => {
             product.title = title;
-            product.imageUrl = imageUrl;
+            if (image) {
+                product.imageUrl = image.path;
+            }
             product.price = price;
             product.description = description;
             return product.save()
