@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const Products = require('../models/products');
 const Orders = require('../models/order');
 
@@ -134,6 +136,18 @@ exports.getCheckout = (req, res, next) => {
     res.render('shop/checkout', { path: '/checkout', pageTitle: 'Checkout', isAuthenticated: req.session.isLoggedIn })
 }
 
-exports.getInvoice = (req,res,next)=>{
-    
+exports.getInvoice = (req, res, next) => {
+    const orderId = req.params.orderId;
+    const invoiceName = 'invoice-' + orderId + '.pdf';
+    const invoicePath = path.join('data', 'invoices', invoiceName);
+    fs.readFile(invoicePath, (err, data) => {
+        if (err) {
+            return next(err)
+        }
+        //For setting the content type of file.
+        res.setHeader('Content-Type','application/pdf');
+        //For setting the filename while download.
+        res.setHeader('Content-Disposition','attachment; filename="'+invoiceName+'"');
+        res.send(data);
+    })
 }
