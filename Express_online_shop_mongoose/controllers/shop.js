@@ -133,3 +133,7 @@ exports.postOrders = (req, res, next) => {
 exports.getCheckout = (req, res, next) => {
     res.render('shop/checkout', { path: '/checkout', pageTitle: 'Checkout', isAuthenticated: req.session.isLoggedIn })
 }
+
+exports.getInvoice = (req,res,next)=>{
+    
+}
