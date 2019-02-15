@@ -149,16 +149,21 @@ exports.getInvoice = (req, res, next) => {
             else if (order.user.userId.toString() !== req.user._id.toString()) {
                 return next(new Error("Un authorized"))
             } else {
-                fs.readFile(invoicePath, (err, data) => {
-                    if (err) {
-                        return next(err)
-                    }
-                    //For setting the content type of file.
-                    res.setHeader('Content-Type', 'application/pdf');
-                    //For setting the filename while download.
-                    res.setHeader('Content-Disposition', 'attachment; filename="' + invoiceName + '"');
-                    res.send(data);
-                });
+                // fs.readFile(invoicePath, (err, data) => {
+                //     if (err) {
+                //         return next(err)
+                //     }
+                //     //For setting the content type of file.
+                //     res.setHeader('Content-Type', 'application/pdf');
+                //     //For setting the filename while download.
+                //     res.setHeader('Content-Disposition', 'attachment; filename="' + invoiceName + '"');
+                //     res.send(data);
+                // });
+
+                const file = fs.createReadStream(invoicePath);
+                res.setHeader('Content-Type', 'application/pdf');
+                res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+                file.pipe(res);
             }
         })
         .catch(err => next(err))
