@@ -140,14 +140,26 @@ exports.getInvoice = (req, res, next) => {
     const orderId = req.params.orderId;
     const invoiceName = 'invoice-' + orderId + '.pdf';
     const invoicePath = path.join('data', 'invoices', invoiceName);
-    fs.readFile(invoicePath, (err, data) => {
-        if (err) {
-            return next(err)
-        }
-        //For setting the content type of file.
-        res.setHeader('Content-Type','application/pdf');
-        //For setting the filename while download.
-        res.setHeader('Content-Disposition','attachment; filename="'+invoiceName+'"');
-        res.send(data);
-    })
+
+    Orders.findById(orderId)
+        .then(order => {
+            if (!order) {
+                return next(new Error("No order found"))
+            }
+            else if (order.user.userId.toString() !== req.user._id.toString()) {
+                return next(new Error("Un authorized"))
+            } else {
+                fs.readFile(invoicePath, (err, data) => {
+                    if (err) {
+                        return next(err)
+                    }
+                    //For setting the content type of file.
+                    res.setHeader('Content-Type', 'application/pdf');
+                    //For setting the filename while download.
+                    res.setHeader('Content-Disposition', 'attachment; filename="' + invoiceName + '"');
+                    res.send(data);
+                });
+            }
+        })
+        .catch(err => next(err))
 }
