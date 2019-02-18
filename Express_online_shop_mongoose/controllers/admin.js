@@ -1,4 +1,5 @@
 const Products = require('../models/products');
+const ITEMS_PER_PAGE = 2;
 
 exports.getAddProduct = (req, res, next) => {
     res.render('admin/add-product', {
@@ -31,12 +32,25 @@ exports.addProducts = (req, res, next) => {
 }
 
 exports.getProducts = (req, res, next) => {
+    let totalItems = 0;
+    const page = +req.query.page || 1;
     Products.find()
+        .countDocuments()
+        .then(numProducts => {
+            totalItems = numProducts;
+            return Products.find()
+                .skip((page - 1) * ITEMS_PER_PAGE)
+                .limit(ITEMS_PER_PAGE)
+        })
         .then(products => res.render('admin/products', {
             prods: products,
             pageTitle: 'Admin Products',
             path: '/admin/products',
-            isAuthenticated: req.session.isLoggedIn
+            isAuthenticated: req.session.isLoggedIn,
+            hasPreviousPage: page > 1,
+            hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+            currentPage: page,
+            totalpage:parseInt(totalItems/ITEMS_PER_PAGE)
         }))
         .catch(err => {
             const error = new Error(err);

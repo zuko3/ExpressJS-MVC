@@ -3,15 +3,29 @@ const path = require('path');
 const Products = require('../models/products');
 const Orders = require('../models/order');
 const pdfkit = require('pdfkit');
+const ITEMS_PER_PAGE = 2;
 
 exports.getIndex = (req, res, next) => {
+    let totalItems = 0;
+    const page = +req.query.page || 1;
     Products.find()
+        .countDocuments()
+        .then(numProducts => {
+            totalItems = numProducts;
+            return Products.find()
+                .skip((page - 1) * ITEMS_PER_PAGE)
+                .limit(ITEMS_PER_PAGE)
+        })
         .then(products =>
             res.render('shop/index', {
                 prods: products,
                 pageTitle: 'Shop',
                 path: '/',
-                isAuthenticated: req.session.isLoggedIn
+                isAuthenticated: req.session.isLoggedIn,
+                hasPreviousPage: page > 1,
+                hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+                currentPage: page,
+                totalpage:parseInt(totalItems/ITEMS_PER_PAGE)
             })
         ).catch(err => {
             const error = new Error(err);
@@ -21,10 +35,27 @@ exports.getIndex = (req, res, next) => {
 }
 
 exports.getProducts = (req, res, next) => {
+    let totalItems = 0;
+    const page = +req.query.page || 1;
     Products.find()
-        .then(products =>
+        .countDocuments()
+        .then(numProducts => {
+            totalItems = numProducts;
+            return Products.find()
+                .skip((page - 1) * ITEMS_PER_PAGE)
+                .limit(ITEMS_PER_PAGE)
+        }).then(products =>
             res.render('shop/product-list',
-                { prods: products, pageTitle: 'All Products', path: '/products', isAuthenticated: req.session.isLoggedIn })
+                {
+                    prods: products,
+                    pageTitle: 'All Products',
+                    path: '/products',
+                    isAuthenticated: req.session.isLoggedIn,
+                    hasPreviousPage: page > 1,
+                    hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+                    currentPage: page,
+                    totalpage:parseInt(totalItems/ITEMS_PER_PAGE)
+                })
         ).catch(err => {
             const error = new Error(err);
             error.httpStatusCode = 500;
@@ -174,10 +205,10 @@ exports.getInvoice = (req, res, next) => {
                 })
                 let total = 0;
                 order.products.forEach(prod => {
-                    total =  total + (prod.quantity * prod.product.price);
+                    total = total + (prod.quantity * prod.product.price);
                     pdfDoc.fontSize(14).text(prod.product.title + " - " + prod.quantity + ' x $' + prod.product.price)
                 })
-                pdfDoc.fontSize(14).text('Total price : $'+total)
+                pdfDoc.fontSize(14).text('Total price : $' + total)
                 pdfDoc.end();
 
                 /**
