@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Add product</title>
+        <link rel="stylesheet" href="/css/main.css">
+    </head>
+    <body>
+        <%- include('../include/header.ejs') %>
+        <h2>Enter Details</h2>
+        <form method="POST" action="/product/add">
+            <label>Name:</label>
+            <input type="text" name="name" required/>
+            <label>Price</label>
+            <input type="text" name="price" required/>
+            <label>Url</label>
+            <input type="url" name="url" required/>
+            <input type="submit" value="submit"/>
+        </form>
+    </body>
+</html>
