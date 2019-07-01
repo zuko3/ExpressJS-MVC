@@ -1,0 +1,12 @@
+<html>
+    <head>
+        <title><%=title%></title>
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+    </head>
+    <body>
+        <%- include('./include/header.ejs') %>
+        <%products.forEach(function(product){%>
+            <li><%=product.id%> <%=product.name%> <%=product.price%> <img style="height: 50;width: 50" src="<%=product.url%>"/></li>
+        <%})%>
+    </body>
+</html>
