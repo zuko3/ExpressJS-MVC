@@ -1,5 +1,5 @@
 # ExpressJS-MVC
-This Repository contains all ExpressJS Applications<br>
+ExpressJS Applications<br>
 
 # 1. Express_mvc_1
 This is Static webapplication using expressJS. MVC Pattern is followed.</br>
