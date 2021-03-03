@@ -4,6 +4,6 @@
     "version": "0.0.1",
     "dependencies": {
         "express": "4.4.4",
-        "pug": "^2.0.3"
+        "pug": "^3.0.1"
     }
 }
